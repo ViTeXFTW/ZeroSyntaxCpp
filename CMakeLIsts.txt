@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(ZeroSyntaxCpp)
+project(ZeroSyntaxServer)
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 17)
@@ -10,9 +10,8 @@ include(FetchContent)
 
 # Dependencies
 set(JSON_Install OFF CACHE INTERNAL "")
-add_subdirectory(Dependencies/json)
-
-add_subdirectory(Dependencies/spdlog)
+add_subdirectory(Server/lib/json)
+add_subdirectory(Server/lib/spdlog)
 
 FetchContent_Declare(
   googletest
@@ -22,28 +21,32 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Structure
+# CMakeLists.txt
 set(SOURCES
-    LanguageServer/src/main.cpp
-    # LanguageServer/src/protocol/json_rpc_handler.cpp
-    # LanguageServer/src/protocol/lsp_server.cpp
-    # LanguageServer/src/core/document_manager.cpp
-    # LanguageServer/src/parser/ini_parser.cpp
-    # LanguageServer/src/utils/logger.cpp   
+    Server/src/main.cpp
+    Server/src/protocol/lsp_server.cpp
+    Server/src/protocol/json_rpc_handler.cpp
+    Server/src/protocol/lsp_messages.cpp
+    Server/src/utils/logger.cpp
+    Server/src/core/document_manager.cpp
 )
 
-add_executable(zerosyntax_server ${SOURCES})
+add_executable(ZS_Server ${SOURCES})
 
-target_link_libraries(zerosyntax_server PRIVATE
+target_link_libraries(ZS_Server PRIVATE
     nlohmann_json::nlohmann_json
     spdlog::spdlog
 )
 
+target_include_directories(ZS_Server PRIVATE
+    Server/include
+)
+
 # Install
-install(TARGETS zerosyntax_server DESTINATION bin)
+install(TARGETS ZS_Server DESTINATION bin)
 
 # Testing
 enable_testing()
-# add_subdirectory(LanguageServer/tests)
+add_subdirectory(Server/tests)
 
 include(GoogleTest)
-gtest_discover_tests(zerosyntax_server)
