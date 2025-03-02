@@ -1,0 +1,49 @@
+cmake_minimum_required(VERSION 3.15)
+project(ZeroSyntaxCpp)
+
+# C++ Standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+include(FetchContent)
+
+# Dependencies
+set(JSON_Install OFF CACHE INTERNAL "")
+add_subdirectory(Dependencies/json)
+
+add_subdirectory(Dependencies/spdlog)
+
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+# Structure
+set(SOURCES
+    LanguageServer/src/main.cpp
+    # LanguageServer/src/protocol/json_rpc_handler.cpp
+    # LanguageServer/src/protocol/lsp_server.cpp
+    # LanguageServer/src/core/document_manager.cpp
+    # LanguageServer/src/parser/ini_parser.cpp
+    # LanguageServer/src/utils/logger.cpp   
+)
+
+add_executable(zerosyntax_server ${SOURCES})
+
+target_link_libraries(zerosyntax_server PRIVATE
+    nlohmann_json::nlohmann_json
+    spdlog::spdlog
+)
+
+# Install
+install(TARGETS zerosyntax_server DESTINATION bin)
+
+# Testing
+enable_testing()
+# add_subdirectory(LanguageServer/tests)
+
+include(GoogleTest)
+gtest_discover_tests(zerosyntax_server)
