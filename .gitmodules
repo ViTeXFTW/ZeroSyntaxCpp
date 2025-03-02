@@ -1,6 +1,6 @@
-[submodule "LanguageServer/lib/json"]
-	path = LanguageServer/lib/json
+[submodule "Server/lib/json"]
+	path = Server/lib/json
 	url = https://github.com/nlohmann/json.git
-[submodule "LanguageServer/lib/spdlog"]
-	path = LanguageServer/lib/spdlog
+[submodule "Server/lib/spdlog"]
+	path = Server/lib/spdlog
 	url = https://github.com/gabime/spdlog.git
